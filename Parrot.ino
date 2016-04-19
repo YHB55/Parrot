@@ -11,6 +11,7 @@
 #include "TtoABV.h"
 
 /*-----( Definitions )-----*/
+#define CHECK_ALARM_CONDITIONS_EVERY 50
 #define READ_SENSORS_EVERY 400
 #define TEMPERATURE_PRECISION 12
 #define READ_ROTARY_EVERY 100
@@ -55,6 +56,7 @@ int currentRotary = -1;
 int previousRotary = -1;
 bool shutDown = false;
 
+unsigned long lastAlarmConditionsCheck;
 unsigned long lastSensorRead;
 unsigned long lastRotaryRead;
 unsigned long lastDisplayUpdate;
@@ -102,6 +104,7 @@ void setup() {
 
   //Initialise asynchronous function variables
   unsigned long now = millis();
+  lastAlarmConditionsCheck = now;
   lastSensorRead = now;
   lastRotaryRead = now;
   lastDisplayUpdate = now;
@@ -129,6 +132,7 @@ void setBlinkMode(int mode) {
 
 void loop() {
 
+  doFunctionAtInterval(checkAlarmConditions, &lastAlarmConditionsCheck, CHECK_ALARM_CONDITIONS_EVERY); // check alarm conditions
   doFunctionAtInterval(readSensors, &lastSensorRead, READ_SENSORS_EVERY);  // read the sensors
   if (boilerTempC < 78) {
     currentScreen = -2; //Warmup Screen1
@@ -140,13 +144,6 @@ void loop() {
   else if (vaporTempC < 30) {
     currentScreen = 0; //Warmup Screen2 distillation iminent
   }
-  else if (boilerTempC > 95) {
-    currentScreen = -3; //End Of Run Boiler Overheating
-  }
-  else if (PCTempOut > 50) {
-    currentScreen = -3; //End Of Run Boiler Overheating
-  }
-
   else {
     doFunctionAtInterval(readRotary, &lastRotaryRead, READ_ROTARY_EVERY); // read rotary switch
     currentScreen = currentRotary;
@@ -519,7 +516,7 @@ void writeScreenFixed(int screen) {
       // Something went wrong to get here
       break;
   }
-  
+
 }
 
 void writeScreenDynamic(int screen) {
@@ -556,7 +553,6 @@ void writeScreenDynamic(int screen) {
       myGLCD.setBackColor(VGA_TRANSPARENT);
       myGLCD.setColor(VGA_BLACK);
       myGLCD.setFont(GroteskBold16x32);
-      //myGLCD.print("WARMING UP", 250, 40, 90);
       myGLCD.print("END OF RUN", 270, 45, 90);
       myGLCD.print("CLOSING DOWN", 230, 30, 90);
       //Display boiler temp
@@ -729,7 +725,7 @@ void writeScreenDynamic(int screen) {
       // Something went wrong to get here
       break;
   }
-  
+
 }
 
 void initRotary() {
@@ -738,7 +734,7 @@ void initRotary() {
     pinMode( i, INPUT);
     digitalWrite( i, HIGH); // turn on internal pullup resistor
   }
-  
+
 }
 
 void readRotary() {
@@ -777,6 +773,7 @@ void readSensors() {
 }
 
 void setBlinkAndBeep() {
+
   blinkCount = 0;
   blinkAndBeepMode = BLINK_AND_BEEP;
 
@@ -823,45 +820,22 @@ void blinkAndBeep() {
 void checkAlarmConditions() {
 
   //End of run based on the temperature of the boiler.
-  if ( boilerTempC > 98.5) {
-    //write functionality to display shutdown message here!
-
-    //    blinkAndBeepMode = BLINK_AND_BEEP;
-
-    //   myGLCD.setColor(VGA_AQUA);
-    //     myGLCD.fillRoundRect(185, 11, 295, 230);
-    //     myGLCD.setBackColor(VGA_AQUA);
-    //     myGLCD.setColor(VGA_BLACK);
-    //     myGLCD.setFont(GroteskBold16x32);
-    //     myGLCD.print("SHUTTING DOWN", 250, 15, 90);
-    //    delay (3000);
-
+  if ( boilerTempC > 95 ) {
+    currentScreen = -3; //End Of Run Boiler Overheating
     autoShutdown();
   }
 
   //Excessive heat in condenser output.
-
   if (PCTempOut > 50) {
-    //write functionality to display shutdown message here!
-
-    //   blinkAndBeepMode = BLINK_AND_BEEP;
-
-    //     myGLCD.setColor(VGA_AQUA);
-    //    myGLCD.fillRoundRect(185, 11, 295, 230);
-    //    myGLCD.setBackColor(VGA_AQUA);
-    //    myGLCD.setColor(VGA_BLACK);
-    //     myGLCD.setFont(GroteskBold16x32);
-    //     myGLCD.print("SHUTTING DOWN", 250, 15, 90);
-    //    delay (3000);
-
+    currentScreen = -4;
     autoShutdown();
-  
+  }
 
-// if(Vapour escaping to atmosphere) {
-// }
+  // if(Vapour escaping to atmosphere) {
+  // }
 
-// if(Over pressure in the boiler) {
-// }
+  // if(Over pressure in the boiler) {
+  // }
 
 }
 
