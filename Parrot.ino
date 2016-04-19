@@ -75,6 +75,7 @@ extern uint8_t SevenSegNumFont[];
 extern uint8_t SevenSegNumFontPlusPlus[];
 extern uint8_t GroteskBold16x32[];
 extern uint8_t Retro8x16[];
+
 void setup() {
 
   Serial.begin(115200);
@@ -89,7 +90,7 @@ void setup() {
   sensors.setResolution(productCondensorInletProbe, TEMPERATURE_PRECISION);
   sensors.setResolution(productCondensorOutletProbe, TEMPERATURE_PRECISION);
 
-// Automatic startup
+  // Automatic startup
   autoStartup();
 
   // Initialise LCD
@@ -130,7 +131,7 @@ void loop() {
 
   doFunctionAtInterval(readSensors, &lastSensorRead, READ_SENSORS_EVERY);  // read the sensors
   if (boilerTempC < 78) {
-    currentScreen = -2; //Warmup Screen1 
+    currentScreen = -2; //Warmup Screen1
   }
   else if (boilerTempC < 82) {
     currentScreen = -1; //Warmup Screen2 check coolant
@@ -139,12 +140,12 @@ void loop() {
   else if (vaporTempC < 30) {
     currentScreen = 0; //Warmup Screen2 distillation iminent
   }
-else if (boilerTempC > 95) {
+  else if (boilerTempC > 95) {
     currentScreen = -3; //End Of Run Boiler Overheating
-}
-else if (PCTempOut > 50) {
+  }
+  else if (PCTempOut > 50) {
     currentScreen = -3; //End Of Run Boiler Overheating
-}
+  }
 
   else {
     doFunctionAtInterval(readRotary, &lastRotaryRead, READ_ROTARY_EVERY); // read rotary switch
@@ -183,7 +184,7 @@ void writeScreenFixed(int screen) {
 
   // Write code to draw shapes and 'non-updating' display text
   switch (screen) {
-    
+
     case -4:
       // End Of Run
       myGLCD.setColor(VGA_BLACK);
@@ -192,7 +193,7 @@ void writeScreenFixed(int screen) {
       myGLCD.setFont(GroteskBold16x32);
       myGLCD.print("Degrees C", 60, 55, 90);
       break;
-      
+
     case -3:
       // End Of Run
       myGLCD.setColor(VGA_BLACK);
@@ -201,7 +202,7 @@ void writeScreenFixed(int screen) {
       myGLCD.setFont(GroteskBold16x32);
       myGLCD.print("Degrees C", 60, 55, 90);
       break;
-        case -2:
+    case -2:
       // Warmup Screen1
       myGLCD.setColor(VGA_BLACK);
       myGLCD.setBackColor(VGA_YELLOW);
@@ -302,9 +303,9 @@ void writeScreenFixed(int screen) {
       myGLCD.setColor(VGA_BLUE);
       myGLCD.print("Deg C", 285, 15, 90);
       break;
-case 4:
+    case 4:
       // Distilling Mode4
-     myGLCD.fillScr(VGA_YELLOW);
+      myGLCD.fillScr(VGA_YELLOW);
       //Draw Boiler
       myGLCD.setColor(VGA_BLUE);
       myGLCD.fillRect(20, 15, 130, 115);
@@ -323,11 +324,11 @@ case 4:
       myGLCD.setColor(VGA_YELLOW);
       myGLCD.fillCircle(255, 105, 36);
       myGLCD.fillRect(200, 69, 255, 141);
- //Draw Condenser
+      //Draw Condenser
       myGLCD.setColor(VGA_BLUE);
       myGLCD.fillRect(150, 131, 255, 162);
       myGLCD.fillRect(160, 162, 165, 172);
-      myGLCD.fillRect(240, 162, 245, 172); 
+      myGLCD.fillRect(240, 162, 245, 172);
       myGLCD.setFont(BigFont);
       myGLCD.setColor(VGA_YELLOW);
       myGLCD.setBackColor(VGA_BLUE);
@@ -349,8 +350,8 @@ case 4:
       myGLCD.setBackColor(VGA_YELLOW);
       myGLCD.print("<-", 177, 180, 90);
       myGLCD.print("->", 257, 180, 90);
-       break;
-       case 5:
+      break;
+    case 5:
       // Distilling Mode5
       myGLCD.fillScr(VGA_YELLOW);
       //Draw Boiler
@@ -369,14 +370,14 @@ case 4:
       myGLCD.setColor(VGA_YELLOW);
       myGLCD.fillCircle(270, 115, 36);
       myGLCD.fillRect(190, 79, 270, 151);
-       myGLCD.setColor(VGA_BLUE);
+      myGLCD.setColor(VGA_BLUE);
       myGLCD.fillRect(70, 62, 270, 85);
       myGLCD.fillRect(120, 151, 270, 162);
       //Draw Condenser
       myGLCD.setColor(VGA_BLUE);
       myGLCD.fillRect(140, 141, 245, 172);
       myGLCD.fillRect(150, 172, 155, 182);
-      myGLCD.fillRect(230, 172, 235, 182); 
+      myGLCD.fillRect(230, 172, 235, 182);
       myGLCD.setFont(BigFont);
       myGLCD.setColor(VGA_YELLOW);
       myGLCD.setBackColor(VGA_BLUE);
@@ -417,107 +418,108 @@ case 4:
       myGLCD.setFont(BigFont);
       myGLCD.print("%", 95, 40, 90);
       myGLCD.print("%", 135, 40, 90);
-      myGLCD.print("%", 175, 40, 90);    
-      myGLCD.print("%", 215, 40, 90);   
+      myGLCD.print("%", 175, 40, 90);
+      myGLCD.print("%", 215, 40, 90);
       myGLCD.setColor(VGA_YELLOW);
       myGLCD.setBackColor(VGA_BLUE);
       myGLCD.setFont(BigFont);
       myGLCD.setColor(VGA_BLACK);
       myGLCD.setFont(GroteskBold16x32);
-     
-       break;
-case 6:
-// Distilling Mode6
+
+      break;
+    case 6:
+      // Distilling Mode6
       myGLCD.fillScr(VGA_YELLOW);
       //Draw Boiler
       myGLCD.setColor(VGA_BLUE);
-     myGLCD.setFont(BigFont);
-     myGLCD.setBackColor(VGA_YELLOW);
-     myGLCD.print("BOILER", 100, 10, 90);
-     myGLCD.print("PLATE 1", 120, 10, 90);
-     myGLCD.print("PLATE 2", 140, 10, 90);
-     myGLCD.print("PLATE 3", 160, 10, 90);
-     myGLCD.print("PLATE 4", 180, 10, 90);
-     myGLCD.print("PLATE 5", 200, 10, 90);
-     myGLCD.print("PLATE 6", 220, 10, 90);
-     myGLCD.print("PLATE 7", 240, 10, 90);
-     myGLCD.print("PLATE 8", 260, 10, 90);
-     myGLCD.print("OUTPUT", 280, 10, 90);
+      myGLCD.setFont(BigFont);
+      myGLCD.setBackColor(VGA_YELLOW);
+      myGLCD.print("BOILER", 100, 10, 90);
+      myGLCD.print("PLATE 1", 120, 10, 90);
+      myGLCD.print("PLATE 2", 140, 10, 90);
+      myGLCD.print("PLATE 3", 160, 10, 90);
+      myGLCD.print("PLATE 4", 180, 10, 90);
+      myGLCD.print("PLATE 5", 200, 10, 90);
+      myGLCD.print("PLATE 6", 220, 10, 90);
+      myGLCD.print("PLATE 7", 240, 10, 90);
+      myGLCD.print("PLATE 8", 260, 10, 90);
+      myGLCD.print("OUTPUT", 280, 10, 90);
 
-myGLCD.print("%", 100, 210, 90);
-     myGLCD.print("%", 120, 210, 90);
-     myGLCD.print("%", 140, 210, 90);
-     myGLCD.print("%", 160, 210, 90);
-     myGLCD.print("%", 180, 210, 90);
-     myGLCD.print("%", 200, 210, 90);
-     myGLCD.print("%", 220, 210, 90);
-     myGLCD.print("%", 240, 210, 90);
-     myGLCD.print("%", 260, 210, 90);
-     myGLCD.print("%", 280, 210, 90); 
+      myGLCD.print("%", 100, 210, 90);
+      myGLCD.print("%", 120, 210, 90);
+      myGLCD.print("%", 140, 210, 90);
+      myGLCD.print("%", 160, 210, 90);
+      myGLCD.print("%", 180, 210, 90);
+      myGLCD.print("%", 200, 210, 90);
+      myGLCD.print("%", 220, 210, 90);
+      myGLCD.print("%", 240, 210, 90);
+      myGLCD.print("%", 260, 210, 90);
+      myGLCD.print("%", 280, 210, 90);
 
-     myGLCD.print("PROBE", 310, 10, 90);
-     myGLCD.print("%ABV", 310, 150, 90);
-     myGLCD.print("T Diff", 70, 80, 90);
-     myGLCD.print("Deflag", 50, 20, 90);
-     myGLCD.print("P.C.", 50, 150, 90);  
-break;
-   case 7:
-// Distilling Mode7  
-myGLCD.fillScr(VGA_YELLOW);
-myGLCD.setColor(VGA_BLACK); 
-myGLCD.fillRect(210, 30, 310, 210);
-myGLCD.setColor(VGA_FUCHSIA); 
-myGLCD.fillRect(215, 35, 305, 205);
-     
-myGLCD.setColor(VGA_BLACK); 
-myGLCD.setFont(BigFont);
-myGLCD.setBackColor(VGA_FUCHSIA);
-     
-     
-myGLCD.print("Adjust", 290, 75, 90);
-myGLCD.print("Product", 270, 70, 90);
-myGLCD.print("Condenser", 250, 50, 90);
+      myGLCD.print("PROBE", 310, 10, 90);
+      myGLCD.print("%ABV", 310, 150, 90);
+      myGLCD.print("T Diff", 70, 80, 90);
+      myGLCD.print("Deflag", 50, 20, 90);
+      myGLCD.print("P.C.", 50, 150, 90);
+      break;
+    case 7:
+      // Distilling Mode7
+      myGLCD.fillScr(VGA_YELLOW);
+      myGLCD.setColor(VGA_BLACK);
+      myGLCD.fillRect(210, 30, 310, 210);
+      myGLCD.setColor(VGA_FUCHSIA);
+      myGLCD.fillRect(215, 35, 305, 205);
 
-myGLCD.setColor(VGA_BLACK); 
-myGLCD.setFont(BigFont);
-myGLCD.setBackColor(VGA_YELLOW);
+      myGLCD.setColor(VGA_BLACK);
+      myGLCD.setFont(BigFont);
+      myGLCD.setBackColor(VGA_FUCHSIA);
 
-myGLCD.setFont(BigFont);
-myGLCD.print("T(in)  Deg C", 200, 20, 90);
-myGLCD.print("T(out) Deg C", 140, 20, 90);
-myGLCD.print("T(diff)Deg C",80, 20, 90);
 
-break; 
+      myGLCD.print("Adjust", 290, 75, 90);
+      myGLCD.print("Product", 270, 70, 90);
+      myGLCD.print("Condenser", 250, 50, 90);
 
-case 8:
-// Distilling Mode8  
-myGLCD.fillScr(VGA_YELLOW);
-myGLCD.setColor(VGA_BLACK); 
-myGLCD.fillRect(210, 30, 310, 210);
-myGLCD.setColor(VGA_AQUA); 
-myGLCD.fillRect(215, 35, 305, 205);
-     
-myGLCD.setColor(VGA_BLACK); 
-myGLCD.setFont(BigFont);
-myGLCD.setBackColor(VGA_AQUA);
-     
-     
-myGLCD.print("Adjust", 290, 75, 90);
-myGLCD.print("Dephlag", 270, 70, 90);
-myGLCD.print("Cooling", 250, 70, 90);
+      myGLCD.setColor(VGA_BLACK);
+      myGLCD.setFont(BigFont);
+      myGLCD.setBackColor(VGA_YELLOW);
 
-myGLCD.setColor(VGA_BLACK); 
-myGLCD.setFont(BigFont);
-myGLCD.setBackColor(VGA_YELLOW);
+      myGLCD.setFont(BigFont);
+      myGLCD.print("T(in)  Deg C", 200, 20, 90);
+      myGLCD.print("T(out) Deg C", 140, 20, 90);
+      myGLCD.print("T(diff)Deg C", 80, 20, 90);
 
-myGLCD.setFont(BigFont);
-myGLCD.print("T(in)  Deg C", 200, 20, 90);
-myGLCD.print("T(out) Deg C", 140, 20, 90);
-myGLCD.print("T(diff)Deg C",80, 20, 90);
+      break;
+
+    case 8:
+      // Distilling Mode8
+      myGLCD.fillScr(VGA_YELLOW);
+      myGLCD.setColor(VGA_BLACK);
+      myGLCD.fillRect(210, 30, 310, 210);
+      myGLCD.setColor(VGA_AQUA);
+      myGLCD.fillRect(215, 35, 305, 205);
+
+      myGLCD.setColor(VGA_BLACK);
+      myGLCD.setFont(BigFont);
+      myGLCD.setBackColor(VGA_AQUA);
+
+
+      myGLCD.print("Adjust", 290, 75, 90);
+      myGLCD.print("Dephlag", 270, 70, 90);
+      myGLCD.print("Cooling", 250, 70, 90);
+
+      myGLCD.setColor(VGA_BLACK);
+      myGLCD.setFont(BigFont);
+      myGLCD.setBackColor(VGA_YELLOW);
+
+      myGLCD.setFont(BigFont);
+      myGLCD.print("T(in)  Deg C", 200, 20, 90);
+      myGLCD.print("T(out) Deg C", 140, 20, 90);
+      myGLCD.print("T(diff)Deg C", 80, 20, 90);
     default:
       // Something went wrong to get here
       break;
   }
+  
 }
 
 void writeScreenDynamic(int screen) {
@@ -525,9 +527,7 @@ void writeScreenDynamic(int screen) {
   // Write code to draw shapes and 'updating' display text, such as sensor data
   switch (screen) {
     case -4:
-      
       // PC Overheating
-      
       if (blinkOutput) {
         myGLCD.setColor(VGA_RED);
       } else {
@@ -538,17 +538,15 @@ void writeScreenDynamic(int screen) {
       myGLCD.setColor(VGA_BLACK);
       myGLCD.setFont(GroteskBold16x32);
       //myGLCD.print("WARMING UP", 250, 40, 90);
-     myGLCD.print("PC TOO HOT", 270, 40, 90);
+      myGLCD.print("PC TOO HOT", 270, 40, 90);
       myGLCD.print("ACTION REQ'D", 230, 25, 90);
       //Display boiler temp
       myGLCD.setBackColor(VGA_YELLOW);
       myGLCD.setColor(VGA_BLACK);
       myGLCD.setFont(SevenSegNumFontPlusPlus);
       myGLCD.print(String(PCTempOut), 120, 45, 90);
-            
     case -3:
       // End Of Run
-      
       if (blinkOutput) {
         myGLCD.setColor(VGA_RED);
       } else {
@@ -566,7 +564,6 @@ void writeScreenDynamic(int screen) {
       myGLCD.setColor(VGA_BLACK);
       myGLCD.setFont(SevenSegNumFontPlusPlus);
       myGLCD.print(String(boilerTempC), 120, 45, 90);
-      
       break;
     case -2:
       // Warmup Screen1
@@ -650,7 +647,7 @@ void writeScreenDynamic(int screen) {
       myGLCD.setFont(BigFont);
       myGLCD.print (String( boilerTempC ), 110, 35, 90);
       myGLCD.setColor(VGA_BLUE);
-     myGLCD.setBackColor(VGA_YELLOW);
+      myGLCD.setBackColor(VGA_YELLOW);
       myGLCD.print(String( vaporTempC ), 300, 15, 90);
       myGLCD.setColor(VGA_BLACK);
       myGLCD.setFont(GroteskBold16x32);
@@ -667,7 +664,7 @@ void writeScreenDynamic(int screen) {
       myGLCD.print(String(PCTempOut), 175, 150, 90);
       myGLCD.print(String(PCTempIn - PCTempOut), 210, 110, 90);
       break;
-      case 4:
+    case 4:
       // Distilling Mode4
       myGLCD.setColor(VGA_YELLOW);
       myGLCD.setBackColor(VGA_BLUE);
@@ -693,7 +690,6 @@ void writeScreenDynamic(int screen) {
       break;
     case 5:
       // Distilling Mode5
-  
       myGLCD.setFont(GroteskBold16x32);
       myGLCD.setColor(VGA_YELLOW);
       myGLCD.setBackColor(VGA_RED);
@@ -706,9 +702,8 @@ void writeScreenDynamic(int screen) {
       myGLCD.setBackColor(VGA_YELLOW);
       myGLCD.print(String(PCTempIn - PCTempOut), 200, 160, 90);
       break;
-          case 6:
+    case 6:
       // Distilling Mode6
-  
       myGLCD.setFont(BigFont);
       myGLCD.setColor(VGA_BLACK);
       myGLCD.setBackColor(VGA_YELLOW);
@@ -721,22 +716,20 @@ void writeScreenDynamic(int screen) {
       myGLCD.setBackColor(VGA_YELLOW);
       myGLCD.print(String(PCTempIn - PCTempOut), 20, 140, 90);
       break;
- case 7:
+    case 7:
       // Distilling Mode7
-
-myGLCD.setFont(GroteskBold16x32);
-myGLCD.setColor(VGA_BLACK);
-myGLCD.setBackColor(VGA_YELLOW);
-
-myGLCD.print(String(PCTempIn), 180, 80, 90);
-myGLCD.print(String(PCTempOut), 120, 80, 90);
-myGLCD.print(String(PCTempIn - PCTempOut), 60, 80, 90);
-
-     break;  
-      default:
+      myGLCD.setFont(GroteskBold16x32);
+      myGLCD.setColor(VGA_BLACK);
+      myGLCD.setBackColor(VGA_YELLOW);
+      myGLCD.print(String(PCTempIn), 180, 80, 90);
+      myGLCD.print(String(PCTempOut), 120, 80, 90);
+      myGLCD.print(String(PCTempIn - PCTempOut), 60, 80, 90);
+      break;
+    default:
       // Something went wrong to get here
       break;
   }
+  
 }
 
 void initRotary() {
@@ -745,6 +738,7 @@ void initRotary() {
     pinMode( i, INPUT);
     digitalWrite( i, HIGH); // turn on internal pullup resistor
   }
+  
 }
 
 void readRotary() {
@@ -782,8 +776,7 @@ void readSensors() {
 
 }
 
-void setBlinkAndBeep()
-{
+void setBlinkAndBeep() {
   blinkCount = 0;
   blinkAndBeepMode = BLINK_AND_BEEP;
 
@@ -791,89 +784,86 @@ void setBlinkAndBeep()
 
 void blinkAndBeep() {
 
-    switch (blinkAndBeepMode) {
-      case OFF:
-        blinkOutput = false;
-        beepOutput = false;
-        break;
-      case BLINK_ONLY:
-        blinkOutput = !blinkOutput;
-        beepOutput = false;
-        break;
-      case BLINK_AND_BEEP:
-        blinkOutput = !blinkOutput;
-        beepOutput = !beepOutput;
-        break;
-      default:
-        // wrong mode inputed.  Let's switch off
-        blinkOutput = false;
-        beepOutput = false;
-        break;
-    }
+  switch (blinkAndBeepMode) {
+    case OFF:
+      blinkOutput = false;
+      beepOutput = false;
+      break;
+    case BLINK_ONLY:
+      blinkOutput = !blinkOutput;
+      beepOutput = false;
+      break;
+    case BLINK_AND_BEEP:
+      blinkOutput = !blinkOutput;
+      beepOutput = !beepOutput;
+      break;
+    default:
+      // wrong mode inputed.  Let's switch off
+      blinkOutput = false;
+      beepOutput = false;
+      break;
+  }
 
-    // write output to screen backlight and beeper here!
-    if (blinkOutput) {
-      blinkCount++;
-    }
-    if (beepOutput) {
-      //toneAC(BEEPER_FREQUENCY);
-      toneAC( 700, 10, 1000, 0);
-    } else {
-      noToneAC();
-    }
-    if (blinkCount > MAX_BLINKS) {
-      setBlinkMode(OFF);
-    }
+  // write output to screen backlight and beeper here!
+  if (blinkOutput) {
+    blinkCount++;
+  }
+  if (beepOutput) {
+    //toneAC(BEEPER_FREQUENCY);
+    toneAC( 700, 10, 1000, 0);
+  } else {
+    noToneAC();
+  }
+  if (blinkCount > MAX_BLINKS) {
+    setBlinkMode(OFF);
+  }
 
 }
 
 void checkAlarmConditions() {
- 
- //End of run based on the temperature of the boiler.
-  
+
+  //End of run based on the temperature of the boiler.
   if ( boilerTempC > 98.5) {
-   
     //write functionality to display shutdown message here!
-   
-//    blinkAndBeepMode = BLINK_AND_BEEP;
-      
-  //   myGLCD.setColor(VGA_AQUA);
-//     myGLCD.fillRoundRect(185, 11, 295, 230);
-//     myGLCD.setBackColor(VGA_AQUA);
-//     myGLCD.setColor(VGA_BLACK);
-//     myGLCD.setFont(GroteskBold16x32);
-//     myGLCD.print("SHUTTING DOWN", 250, 15, 90);
- //    delay (3000);
-    
-      autoShutdown();
-    
-    }
-  
-  //Excessive heat in condenser output.
-  
-  if (PCTempOut > 50) {
-    
-    //write functionality to display shutdown message here!
-    
- //   blinkAndBeepMode = BLINK_AND_BEEP;
-     
-//     myGLCD.setColor(VGA_AQUA);
- //    myGLCD.fillRoundRect(185, 11, 295, 230);
- //    myGLCD.setBackColor(VGA_AQUA);
- //    myGLCD.setColor(VGA_BLACK);
-//     myGLCD.setFont(GroteskBold16x32);
-//     myGLCD.print("SHUTTING DOWN", 250, 15, 90);
- //    delay (3000);
-    
+
+    //    blinkAndBeepMode = BLINK_AND_BEEP;
+
+    //   myGLCD.setColor(VGA_AQUA);
+    //     myGLCD.fillRoundRect(185, 11, 295, 230);
+    //     myGLCD.setBackColor(VGA_AQUA);
+    //     myGLCD.setColor(VGA_BLACK);
+    //     myGLCD.setFont(GroteskBold16x32);
+    //     myGLCD.print("SHUTTING DOWN", 250, 15, 90);
+    //    delay (3000);
+
     autoShutdown();
   }
-  }
+
+  //Excessive heat in condenser output.
+
+  if (PCTempOut > 50) {
+    //write functionality to display shutdown message here!
+
+    //   blinkAndBeepMode = BLINK_AND_BEEP;
+
+    //     myGLCD.setColor(VGA_AQUA);
+    //    myGLCD.fillRoundRect(185, 11, 295, 230);
+    //    myGLCD.setBackColor(VGA_AQUA);
+    //    myGLCD.setColor(VGA_BLACK);
+    //     myGLCD.setFont(GroteskBold16x32);
+    //     myGLCD.print("SHUTTING DOWN", 250, 15, 90);
+    //    delay (3000);
+
+    autoShutdown();
   
-  // if(Vapour escaping to atmosphere) {
-  // }
-  
-  // if(Over pressure in the boiler) {
-  // }
+
+// if(Vapour escaping to atmosphere) {
+// }
+
+// if(Over pressure in the boiler) {
+// }
+
+}
 
 void autoStartup() {
 
@@ -881,7 +871,7 @@ void autoStartup() {
   digitalWrite(ELEMENT_PIN, HIGH);
   digitalWrite(PUMP_PIN, HIGH);
 
-  }
+}
 
 void autoShutdown() {
 
@@ -903,10 +893,9 @@ void intro() {
   //Introduction Screen 1
   writeDisplayBackground();
   //Add Text
-// add YHB Logo
- 
- myGLCD.fillScr(VGA_WHITE);
- myGLCD.setColor(VGA_WHITE);
+  // add YHB Logo
+  myGLCD.fillScr(VGA_WHITE);
+  myGLCD.setColor(VGA_WHITE);
   myGLCD.fillRect(80, 10, 230, 230);
   //Draw Boiler
   myGLCD.setColor(VGA_BLUE);
@@ -960,121 +949,121 @@ void intro() {
 
   myGLCD.setColor(VGA_BLACK);
   myGLCD.setFont(GroteskBold16x32);
- // myGLCD.print("YHB", 290, 90, 90);
+  // myGLCD.print("YHB", 290, 90, 90);
   //myGLCD.print("Presents", 70, 60, 90);
-  
+
   delay(DISPLAY_TRANSITION_DELAY);
 
   //Draw Parrot
 
-myGLCD.fillScr(VGA_WHITE);
-myGLCD.setColor(VGA_RED);
-myGLCD.fillCircle(196,130,94);
-myGLCD.setColor(VGA_WHITE);
-myGLCD.fillCircle(200,120,82);
-myGLCD.setColor(VGA_BLUE);
-myGLCD.fillCircle(200,115,84);
-myGLCD.setColor(VGA_WHITE);
-myGLCD.fillCircle(208,106,81);
-myGLCD.setColor(VGA_RED);
-myGLCD.fillCircle(198,102,63);
-myGLCD.setColor(VGA_WHITE);
-myGLCD.fillCircle(206,90,40);
-//geo.fillTriangle(80,112,182,117,93,170);
-//geo.fillTriangle(122,150,122,195,93,170);
-//myGLCD.fillRect(78,20,220,116);
-myGLCD.fillRect(120,25,220,80);
-geo.fillTriangle(235,65,272,67,277,100);
-myGLCD.fillRect(210,40,260,70);
-myGLCD.setColor(VGA_RED);
-geo.fillTriangle(110,95,182,115,120,165);
-myGLCD.setColor(VGA_GRAY);
-myGLCD.fillCircle(215,83,29);
-myGLCD.setColor(VGA_WHITE);
-myGLCD.fillRect(187,54,208,112);
-geo.fillTriangle(208,54,208,110,248,72);
-myGLCD.fillCircle(225,94,23);
-myGLCD.setColor(VGA_RED);
-myGLCD.fillCircle(153,88,38);
-myGLCD.setColor(VGA_GRAY);
-geo.fillTriangle(226,61,243,68,230,75);
-geo.fillTriangle(221,63,225,76,210,75);
-myGLCD.setColor(VGA_BLACK);
-myGLCD.fillCircle(236,98,5);
-myGLCD.setColor(VGA_WHITE);
-myGLCD.drawLine(125,160,180,115);
-myGLCD.drawLine(125,160,115,190);
-myGLCD.setBackColor(VGA_RED);
-myGLCD.setFont(GroteskBold16x32);
-myGLCD.print("VS", 160, 75, 90);
-myGLCD.setBackColor(VGA_WHITE);
+  myGLCD.fillScr(VGA_WHITE);
+  myGLCD.setColor(VGA_RED);
+  myGLCD.fillCircle(196, 130, 94);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillCircle(200, 120, 82);
+  myGLCD.setColor(VGA_BLUE);
+  myGLCD.fillCircle(200, 115, 84);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillCircle(208, 106, 81);
+  myGLCD.setColor(VGA_RED);
+  myGLCD.fillCircle(198, 102, 63);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillCircle(206, 90, 40);
+  //geo.fillTriangle(80,112,182,117,93,170);
+  //geo.fillTriangle(122,150,122,195,93,170);
+  //myGLCD.fillRect(78,20,220,116);
+  myGLCD.fillRect(120, 25, 220, 80);
+  geo.fillTriangle(235, 65, 272, 67, 277, 100);
+  myGLCD.fillRect(210, 40, 260, 70);
+  myGLCD.setColor(VGA_RED);
+  geo.fillTriangle(110, 95, 182, 115, 120, 165);
+  myGLCD.setColor(VGA_GRAY);
+  myGLCD.fillCircle(215, 83, 29);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillRect(187, 54, 208, 112);
+  geo.fillTriangle(208, 54, 208, 110, 248, 72);
+  myGLCD.fillCircle(225, 94, 23);
+  myGLCD.setColor(VGA_RED);
+  myGLCD.fillCircle(153, 88, 38);
+  myGLCD.setColor(VGA_GRAY);
+  geo.fillTriangle(226, 61, 243, 68, 230, 75);
+  geo.fillTriangle(221, 63, 225, 76, 210, 75);
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillCircle(236, 98, 5);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.drawLine(125, 160, 180, 115);
+  myGLCD.drawLine(125, 160, 115, 190);
+  myGLCD.setBackColor(VGA_RED);
+  myGLCD.setFont(GroteskBold16x32);
+  myGLCD.print("VS", 160, 75, 90);
+  myGLCD.setBackColor(VGA_WHITE);
   myGLCD.setColor(VGA_BLACK);
   myGLCD.setFont(GroteskBold16x32);
   myGLCD.print("Digital Parrot", 90, 5, 90);
   myGLCD.print("By", 50, 105, 90);
-    
+
   delay(DISPLAY_TRANSITION_DELAY);
 
-myGLCD.fillScr(VGA_WHITE);
+  myGLCD.fillScr(VGA_WHITE);
 
 
-myGLCD.setColor(VGA_BLACK);
+  myGLCD.setColor(VGA_BLACK);
   myGLCD.setFont(GroteskBold16x32);
   myGLCD.print("VisionStills", 310, 20, 90);
-//Draw Arcs
-myGLCD.setColor(VGA_BLUE);
-myGLCD.fillCircle(162,153,76);
-myGLCD.setColor(VGA_WHITE);
-myGLCD.fillCircle(155,155,67);
-myGLCD.fillRect(56,63,206,185);
-myGLCD.setColor(VGA_AQUA);
-myGLCD.fillCircle(152,150,62);
-myGLCD.setColor(VGA_WHITE);
-myGLCD.fillCircle(147,140,61);
-myGLCD.fillRect(76,130,215,175);
-geo.fillTriangle(206,105,215,135,198,140);
+  //Draw Arcs
+  myGLCD.setColor(VGA_BLUE);
+  myGLCD.fillCircle(162, 153, 76);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillCircle(155, 155, 67);
+  myGLCD.fillRect(56, 63, 206, 185);
+  myGLCD.setColor(VGA_AQUA);
+  myGLCD.fillCircle(152, 150, 62);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillCircle(147, 140, 61);
+  myGLCD.fillRect(76, 130, 215, 175);
+  geo.fillTriangle(206, 105, 215, 135, 198, 140);
 
-//Draw V
-myGLCD.setColor(VGA_BLUE);
-myGLCD.fillRect(212,8,222,51);
-myGLCD.fillRect(192,70,200,105);
-geo.fillTriangle(213,40,84,58,212,18);
-geo.fillTriangle(213,40,84,58,130,68);
-geo.fillTriangle(192,81,84,72,84,58);
-geo.fillTriangle(192,81,84,72,192,96);
+  //Draw V
+  myGLCD.setColor(VGA_BLUE);
+  myGLCD.fillRect(212, 8, 222, 51);
+  myGLCD.fillRect(192, 70, 200, 105);
+  geo.fillTriangle(213, 40, 84, 58, 212, 18);
+  geo.fillTriangle(213, 40, 84, 58, 130, 68);
+  geo.fillTriangle(192, 81, 84, 72, 84, 58);
+  geo.fillTriangle(192, 81, 84, 72, 192, 96);
 
-//Draw S
-myGLCD.setColor(VGA_BLUE);
-//myGLCD.fillRect(176,143,217,156);
-myGLCD.fillCircle(120,141,39);
-myGLCD.fillCircle(120,119,39);
-myGLCD.fillRect(81,120,88,142);
-myGLCD.fillCircle(189,132,25);
-myGLCD.setColor(VGA_WHITE);
-myGLCD.fillCircle(120,132,30);
-myGLCD.fillCircle(190,133,15);
-myGLCD.setColor(VGA_BLUE);
-myGLCD.fillRect(176,143,217,156);
-myGLCD.fillRect(81,120,88,142);
-myGLCD.setColor(VGA_WHITE);
-myGLCD.fillCircle(120,132,30);
+  //Draw S
+  myGLCD.setColor(VGA_BLUE);
+  //myGLCD.fillRect(176,143,217,156);
+  myGLCD.fillCircle(120, 141, 39);
+  myGLCD.fillCircle(120, 119, 39);
+  myGLCD.fillRect(81, 120, 88, 142);
+  myGLCD.fillCircle(189, 132, 25);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillCircle(120, 132, 30);
+  myGLCD.fillCircle(190, 133, 15);
+  myGLCD.setColor(VGA_BLUE);
+  myGLCD.fillRect(176, 143, 217, 156);
+  myGLCD.fillRect(81, 120, 88, 142);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillCircle(120, 132, 30);
 
-myGLCD.fillRect(165,135,178,175);
-myGLCD.setColor(VGA_BLUE);
-geo.fillTriangle(175,112,153,163,182,120);
-geo.fillTriangle(175,112,153,163,150,139);
-myGLCD.setColor(VGA_WHITE);
-//myGLCD.setColor(VGA_RED);
-geo.fillTriangle(171,115,135,159,145,120);
+  myGLCD.fillRect(165, 135, 178, 175);
+  myGLCD.setColor(VGA_BLUE);
+  geo.fillTriangle(175, 112, 153, 163, 182, 120);
+  geo.fillTriangle(175, 112, 153, 163, 150, 139);
+  myGLCD.setColor(VGA_WHITE);
+  //myGLCD.setColor(VGA_RED);
+  geo.fillTriangle(171, 115, 135, 159, 145, 120);
 
-//myGLCD.fillCircle(160,120,56);
+  //myGLCD.fillCircle(160,120,56);
 
-myGLCD.setColor(VGA_BLACK);
-myGLCD.setBackColor(VGA_WHITE);
-myGLCD.setFont(Retro8x16);
-myGLCD.print("VisionStills.org", 50, 55, 90);
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.setBackColor(VGA_WHITE);
+  myGLCD.setFont(Retro8x16);
+  myGLCD.print("VisionStills.org", 50, 55, 90);
 
-delay(DISPLAY_TRANSITION_DELAY);
+  delay(DISPLAY_TRANSITION_DELAY);
 }
 
 
