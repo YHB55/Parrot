@@ -824,7 +824,7 @@ void blinkAndBeep() {
 
 }
 
-void checkAlarmConditions() {
+bool checkAlarmConditions() {
 
   alarmCondition = false;
 
@@ -862,7 +862,6 @@ void autoShutdown() {
 
   //Turn off heater element
   digitalWrite(ELEMENT_PIN, LOW);
-  delay(30000); // delay 30 seconds
   digitalWrite(PUMP_PIN, LOW);
 
 }
