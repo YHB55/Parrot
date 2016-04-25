@@ -70,6 +70,8 @@ int blinkOutput = false;
 int beepOutput = false;
 int blinkCount = 0;
 
+bool alarmCondition = false;
+
 // Declare which fonts we will be using
 extern uint8_t SmallFont[];
 extern uint8_t BigFont[];
@@ -133,24 +135,29 @@ void setBlinkMode(int mode) {
 void loop() {
 
   doFunctionAtInterval(checkAlarmConditions, &lastAlarmConditionsCheck, CHECK_ALARM_CONDITIONS_EVERY); // check alarm conditions
-  doFunctionAtInterval(readSensors, &lastSensorRead, READ_SENSORS_EVERY);  // read the sensors
-  if (boilerTempC < 78) {
-    currentScreen = -2; //Warmup Screen1
+
+  if (!alarmCondition) {
+    doFunctionAtInterval(readSensors, &lastSensorRead, READ_SENSORS_EVERY);  // read the sensors
+    if (boilerTempC < 78) {
+      currentScreen = -2; //Warmup Screen1
+    }
+    else if (boilerTempC < 82) {
+      currentScreen = -1; //Warmup Screen2 check coolant
+    }
+    // Boiler above 82 but column below 40
+    else if (vaporTempC < 30) {
+      currentScreen = 0; //Warmup Screen2 distillation iminent
+    }
+    else {
+      doFunctionAtInterval(readRotary, &lastRotaryRead, READ_ROTARY_EVERY); // read rotary switch
+      currentScreen = currentRotary;
+    }
   }
-  else if (boilerTempC < 82) {
-    currentScreen = -1; //Warmup Screen2 check coolant
-  }
-  // Boiler above 82 but column below 40
-  else if (vaporTempC < 30) {
-    currentScreen = 0; //Warmup Screen2 distillation iminent
-  }
-  else {
-    doFunctionAtInterval(readRotary, &lastRotaryRead, READ_ROTARY_EVERY); // read rotary switch
-    currentScreen = currentRotary;
-  }
+
   if ((currentScreen != previousScreen) && (currentScreen <= 0)) {
     setBlinkAndBeep();
   }
+
   doFunctionAtInterval(writeDisplay, &lastDisplayUpdate, UPDATE_DISPLAY_EVERY); // write display every 1/2 second
   doFunctionAtInterval(blinkAndBeep, &lastBlink, BLINK_DELAY);  // blink and/or beep if necessary
 
@@ -819,14 +826,18 @@ void blinkAndBeep() {
 
 void checkAlarmConditions() {
 
+  alarmCondition = false;
+
   //End of run based on the temperature of the boiler.
   if ( boilerTempC > 95 ) {
+    alarmCondition = true;
     currentScreen = -3; //End Of Run Boiler Overheating
     autoShutdown();
   }
 
   //Excessive heat in condenser output.
   if (PCTempOut > 50) {
+    alarmCondition = true;
     currentScreen = -4;
     autoShutdown();
   }
